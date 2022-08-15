@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "run-dev": "DEBUG=backend-spicon:* npm start"
+    "run-dev-Mac": "DEBUG=backend-spicon:* pnpm start",
+    "run-dec-Win": "set DEBUG=backend-spicon:* pnpm start"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
