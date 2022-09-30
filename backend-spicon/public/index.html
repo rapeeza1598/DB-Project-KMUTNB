@@ -1,13 +1,86 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <title>Express</title>
-  <link rel="stylesheet" href="/stylesheets/style.css">
+  <title>Spider Bus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/stylesheets/css/bootstrap.css" rel="stylesheet">
 </head>
 
 <body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
+  <script>
+
+    function hideManu() {
+      document.getElementById("ticket_manu").style.display = "none";
+      document.getElementById("system_manu").style.display = "none";
+    }
+  </script>
+  <div class="container p-5 my-5 bg-dark text-white" id="ticket_manu">
+    <h1>Spider Bus</h1>
+    <p>Spider Bus is a bus for spiders.</p>
+    <p>It is a bus that spiders can ride on.</p>
+    <div class="d-grid">
+      <button type="button" class="btn btn-primary btn-block">Ticket SELL System</button>
+    </div>
+  </div>
+  <div class="container p-5 my-5 bg-dark text-white" id="system_manu">
+    <h1>I NEED YOU, EMPLOYEE</h1>
+    <p>Bus can't ride without you</p>
+    <div class="d-grid">
+      <button onclick="hideManu()" type="button" class="btn btn-primary btn-block">Employee System</button>
+    </div>
+  </div>
+  <!-- employee -->
+  <div class="container p-5 my-5 bg-dark text-white" id="system_manu_employee">
+    <h1>Employee Manu</h1>
+    <p>Management about Employee</p>
+    <div class="d-grid">
+      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Add</button>
+      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Delete</button>
+      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Update</button>
+      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Search</button>
+    </div>
+  </div>
+  <div class="container p-5 my-5 bg-dark text-white" id="system_manu_employee_add">
+    <h1>Employee ADD</h1>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="employee_name">Name</span>
+      <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describelby="employee_name">
+      <span class="input-group-text" id="employee_surname">Surname</span>
+      <input type="text" class="form-control" placeholder="Surname" aria-lable="Name" aria-describedby="employee_surname">
+    </div>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="employee_phoen">Phone</span>
+      <input type="text" class="form-control" placeholder="Phone" aria-label="Phoen" aria-describedby="employee_phone">
+    </div>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="employee_address">Address</span>
+      <input type="text" class="form-control" placeholder="Address" aria-label="Address" aria-describedby="employee_address">
+    </div>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="employee_citizen_id">Citizen ID</span>
+      <input type="text" class="form-control" placeholder="Citizen ID" aria-label="Citizen ID" aria-describedby="employee_citizen_id">
+    </div>
+    <div class="input-group mb-3">
+      <span class="input-group-text" id="employee_position">Position</span>
+      <input type="text" class="form-control" placeholder="Position" aria-label="Position" aria-describedby="employee_position">
+    </div>
+    <div class="d-grid"><button onclick="" type="button" class="btn btn-primary btn-block">Submit</button></div>
+  </div>
+  <!-- employee -->
+  <!-- client -->
+  <div class="container p-5 my-5 bg-dark text-white" id="system_manu_client">
+    <h1>Client Manu</h1>
+    <p>Management about Client</p>
+    <div class="d-grid">
+      <button onclick="" type="button" class="btn btn-primary btn-block">Client Add</button>
+      <button onclick="" type="button" class="btn btn-primary btn-block">Client Delete</button>
+      <button onclick="" type="button" class="btn btn-primary btn-block">Client Update</button>
+      <button onclick="" type="button" class="btn btn-primary btn-block">Client Search</button>
+    </div>
+  </div>
+  <!-- client -->
 </body>
 
 </html>

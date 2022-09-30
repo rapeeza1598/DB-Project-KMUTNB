@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Spider Bus</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/stylesheets/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+  <script>
+    document.getElEMENTById("system_jump").addEventListener("click", function() {
+      var system = document.getElementById("system").value;
+      var url = "http://localhost:3000/system/" + system;
+      window.location.href = url;
+    });
+  </script>
+  <div class="container p-5 my-5 bg-dark text-white">
+    <h1>Spider Bus</h1>
+    <p>Spider Bus is a bus for spiders.</p>
+    <p>It is a bus that spiders can ride on.</p>
+    <div class="d-grid">
+      <button type="button" class="btn btn-primary btn-block">Ticket SELL System</button>
+    </div>
+  </div>
+  <div class="container p-5 my-5 bg-dark text-white">
+    <h1>I NEED YOU, EMPLOYEE</h1>
+    <p>Bus can't ride without you</p>
+    <div class="d-grid">
+      <button onclick="system_jump" type="button" class="btn btn-primary btn-block">Employee System</button>
+    </div>
+</body>
+
+</html>
