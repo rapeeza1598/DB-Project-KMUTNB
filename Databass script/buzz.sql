@@ -66,6 +66,7 @@ CREATE TABLE schedule (
 CREATE TABLE ticket (
     ticket_id serial PRIMARY KEY,
     ticket_price int,
+    ticket_count int,
     ticket_schedule_id int REFERENCES schedule(schedule_id),
     ticket_client_id int REFERENCES client(client_id),
     ticket_station_id int REFERENCES station(station_id),
