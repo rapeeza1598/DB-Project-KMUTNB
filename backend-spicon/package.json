@@ -9,7 +9,9 @@
     "win-run": "set DEBUG=backend-spicon:* pnpm start"
   },
   "dependencies": {
+    "body-parser": "^1.20.1",
     "bootstrap": "5.2.1",
+    "bootstrap-icons": "^1.9.1",
     "cookie-parser": "~1.4.6",
     "cors": "^2.8.5",
     "debug": "~2.6.9",

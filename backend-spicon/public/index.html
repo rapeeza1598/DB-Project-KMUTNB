@@ -9,12 +9,371 @@
 </head>
 
 <body>
+  <nav class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Myproject DB</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" onclick="setdisplay()">Home</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   <script>
-
+    function setdisplay() {
+      hideManu();
+      main_manu();
+      set_inner();
+    }
+    function set_inner() {
+      document.getElementById("tableList_employee").innerHTML = "";
+      document.getElementById("tableList_client").innerHTML = "";
+    }
+    function set_fill_employee() {
+      document.getElementById("employee_name").value = "";
+      document.getElementById("employee_surname").value = "";
+      document.getElementById("employee_phone").value = "";
+      document.getElementById("employee_address").value = "";
+      document.getElementById("employee_citizen_id").value = "";
+      document.getElementById("employee_position").value = "";
+    }
+    function set_fill_client() {
+      document.getElementById("client_name").value = "";
+      document.getElementById("client_surname").value = "";
+      document.getElementById("client_phone").value = "";
+      document.getElementById("client_address").value = "";
+      document.getElementById("client_citizen_id").value = "";
+    }
     function hideManu() {
       document.getElementById("ticket_manu").style.display = "none";
       document.getElementById("system_manu").style.display = "none";
+      document.getElementById("system_manu_employee").style.display = "none";
+      document.getElementById("system_manu_client").style.display = "none";
+      document.getElementById("system_manu_car").style.display = "none";
+      document.getElementById("system_manu_station").style.display = "none";
+      document.getElementById("employee_table").style.display = "none";
+      document.getElementById("btn_menu_employee").style.display = "block";
+      document.getElementById("input_employee").style.display = "none";
+      document.getElementById("client_table").style.display = "none";
+      document.getElementById("btn_menu_client").style.display = "block";
+      document.getElementById("input_client").style.display = "none";
     }
+    function main_manu() {
+      hideManu();
+      document.getElementById("ticket_manu").style.display = "none";
+      document.getElementById("system_manu").style.display = "block";
+    }
+    function hideManu_Systembtn() {
+      hideManu();
+      document.getElementById("system_manu_employee").style.display = "block";
+      document.getElementById("system_manu_client").style.display = "block";
+/*       document.getElementById("system_manu_station").style.display = "block";
+      document.getElementById("system_manu_car").style.display = "block"; */
+    }
+    function manu_employee() {
+      hideManu();
+      document.getElementById("system_manu_employee").style.display = "block";
+      document.getElementById("employee_table").style.display = "block";
+      document.getElementById("btn_menu_employee").style.display = "none";
+      document.getElementById("input_employee").style.display = "block";
+      employee_table();
+    }
+    function employee_post() {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("employee_name", document.getElementById("employee_name").value);
+      urlencoded.append("employee_surname", document.getElementById("employee_surname").value);
+      urlencoded.append("employee_phone", document.getElementById("employee_phone").value);
+      urlencoded.append("employee_address", document.getElementById("employee_address").value);
+      urlencoded.append("employee_citizen_id", document.getElementById("employee_citizen_id").value);
+      urlencoded.append("employee_position", document.getElementById("employee_position").value);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/employee", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      setdisplay();
+      set_fill_employee();
+      manu_employee();
+    }
+    function btn_update_employee(id) {
+      document.getElementById("employee_add").style.display = "none";
+      document.getElementById("employee_update").style.display = "block";
+      document.getElementById("employee_update").innerHTML = `<button onclick="employee_update(${id})" type="button" class="btn btn-success btn-block">Update Employee</button>`;
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("employee_id", id);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/employee_fill", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          document.getElementById("employee_name").value = result[0].employee_name;
+          document.getElementById("employee_surname").value = result[0].employee_surname;
+          document.getElementById("employee_phone").value = result[0].employee_phone;
+          document.getElementById("employee_address").value = result[0].employee_address;
+          document.getElementById("employee_citizen_id").value = result[0].employee_citizen_id;
+          document.getElementById("employee_position").value = result[0].employee_position;
+        })
+        .catch(error => console.log('error', error));
+    }
+    function employee_table() {
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+      fetch("/employee", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result.length);
+          for (let i = 0; i < result.length; i++) {
+            document.getElementById("tableList_employee").innerHTML +=
+              `<tr id="${'tr' + i}">
+                <th scope="row">${result[i].employee_id}</th>
+                <td>${result[i].employee_name}</td>
+                <td>${result[i].employee_surname}</td>
+                <td>${result[i].employee_phone}</td>
+                <td>${result[i].employee_address}</td>
+                <td>${result[i].employee_citizen_id}</td>
+                <td>${result[i].employee_position}</td>
+                <td><button onclick="btn_update_employee(${result[i].employee_id})" value="${result[i].employee_id}" id="${'button_edit' + (i + 1)} type="button" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+</svg></button></td>
+                <td><button onclick="btn_remove_employee(${result[i].employee_id})" value="${result[i].employee_id}" id="${'button_edit' + (i + 1)} type="button" class="btn btn-danger">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+  <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+</svg>
+</button></td>
+              </tr> `;
+          }
+        })
+        .catch(error => console.log('error', error));
+    }
+    function btn_remove_employee(id) {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("employee_id", id);
+
+      var requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/employee_delete", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      setdisplay();
+      set_fill_employee();
+      manu_employee();
+    }
+    function employee_update(id) {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("employee_id", id);
+      urlencoded.append("employee_name", document.getElementById("employee_name").value);
+      urlencoded.append("employee_surname", document.getElementById("employee_surname").value);
+      urlencoded.append("employee_phone", document.getElementById("employee_phone").value);
+      urlencoded.append("employee_address", document.getElementById("employee_address").value);
+      urlencoded.append("employee_citizen_id", document.getElementById("employee_citizen_id").value);
+      urlencoded.append("employee_position", document.getElementById("employee_position").value);
+
+      var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/employee_update", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      document.getElementById("employee_update").style.display = "none";
+      document.getElementById("employee_add").style.display = "block";
+      setdisplay();
+      set_fill_employee();
+      manu_employee();
+    }
+
+    /* end employee */
+
+    function manu_client() {
+      hideManu();
+      document.getElementById("system_manu_client").style.display = "block";
+      document.getElementById("client_table").style.display = "block";
+      document.getElementById("btn_menu_client").style.display = "none";
+      document.getElementById("input_client").style.display = "block";
+      client_table();
+    }
+    function client_post() {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("client_name", document.getElementById("client_name").value);
+      urlencoded.append("client_surname", document.getElementById("client_surname").value);
+      urlencoded.append("client_phone", document.getElementById("client_phone").value);
+      urlencoded.append("client_address", document.getElementById("client_address").value);
+      urlencoded.append("client_citizen_id", document.getElementById("client_citizen_id").value);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/client", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      setdisplay();
+      set_fill_client();
+      manu_client();
+    }
+    function btn_update_client(id) {
+      document.getElementById("client_add").style.display = "none";
+      document.getElementById("client_update").style.display = "block";
+      document.getElementById("client_update").innerHTML = `<button onclick="client_update(${id})" type="button" class="btn btn-success btn-block">Update client</button>`;
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("client_id", id);
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/client_fill", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result);
+          document.getElementById("client_name").value = result[0].client_name;
+          document.getElementById("client_surname").value = result[0].client_surname;
+          document.getElementById("client_phone").value = result[0].client_phone;
+          document.getElementById("client_address").value = result[0].client_address;
+          document.getElementById("client_citizen_id").value = result[0].client_citizen_id;
+        })
+        .catch(error => console.log('error', error));
+    }
+    function client_table() {
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+      fetch("/client", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result.length);
+          for (let i = 0; i < result.length; i++) {
+            document.getElementById("tableList_client").innerHTML +=
+              `<tr id="${'tr' + i}">
+                <th scope="row">${result[i].client_id}</th>
+                <td>${result[i].client_name}</td>
+                <td>${result[i].client_surname}</td>
+                <td>${result[i].client_phone}</td>
+                <td>${result[i].client_address}</td>
+                <td>${result[i].client_citizen_id}</td>
+                <td><button onclick="btn_update_client(${result[i].client_id})" value="${result[i].client_id}" id="${'button_edit' + (i + 1)} type="button" class="btn btn-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+  <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+</svg></button></td>
+                <td><button onclick="btn_remove_client(${result[i].client_id})" value="${result[i].client_id}" id="${'button_edit' + (i + 1)} type="button" class="btn btn-danger">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eraser" viewBox="0 0 16 16">
+  <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828l6.879-6.879zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293l.16-.16z"/>
+</svg>
+</button></td>
+              </tr> `;
+          }
+        })
+        .catch(error => console.log('error', error));
+    }
+    function btn_remove_client(id) {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("client_id", id);
+
+      var requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/client_delete", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      setdisplay();
+      set_fill_client();
+      manu_client();
+    }
+    function client_update(id) {
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("client_id", id);
+      urlencoded.append("client_name", document.getElementById("client_name").value);
+      urlencoded.append("client_surname", document.getElementById("client_surname").value);
+      urlencoded.append("client_phone", document.getElementById("client_phone").value);
+      urlencoded.append("client_address", document.getElementById("client_address").value);
+      urlencoded.append("client_citizen_id", document.getElementById("client_citizen_id").value);
+
+      var requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("/client_update", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+      document.getElementById("client_update").style.display = "none";
+      document.getElementById("client_add").style.display = "block";
+      setdisplay();
+      set_fill_client();
+      manu_client();
+    }
+    
   </script>
   <div class="container p-5 my-5 bg-dark text-white" id="ticket_manu">
     <h1>Spider Bus</h1>
@@ -28,59 +387,163 @@
     <h1>I NEED YOU, EMPLOYEE</h1>
     <p>Bus can't ride without you</p>
     <div class="d-grid">
-      <button onclick="hideManu()" type="button" class="btn btn-primary btn-block">Employee System</button>
+      <button onclick="hideManu_Systembtn()" type="button" class="btn btn-primary btn-block">Employee System</button>
     </div>
   </div>
-  <!-- employee -->
   <div class="container p-5 my-5 bg-dark text-white" id="system_manu_employee">
     <h1>Employee Manu</h1>
     <p>Management about Employee</p>
     <div class="d-grid">
-      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Add</button>
-      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Delete</button>
-      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Update</button>
-      <button onclick="" type="button" class="btn btn-primary btn-block">Employee Search</button>
+      <button onclick="manu_employee()" type="button" class="btn btn-primary btn-block" id="btn_menu_employee">Employee
+        System</button>
+      <div class="contaniner" id="input_employee">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Name --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1"
+            id="employee_name">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Surname --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Surname" aria-label="Surname"
+            aria-describedby="basic-addon1" id="employee_surname">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Phone --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="basic-addon1"
+            id="employee_phone">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Address --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Address" aria-label="Address"
+            aria-describedby="basic-addon1" id="employee_address">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Citizen ID --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Citizen ID" aria-label="Citizen ID"
+            aria-describedby="basic-addon1" id="employee_citizen_id">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Position --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Position" aria-label="Position"
+            aria-describedby="basic-addon1" id="employee_position">
+        </div>
+        <button onclick="employee_post()" type="button" class="btn btn-primary btn-block" id="employee_add">Add
+          Employee</button>
+        <div id="employee_update"></div>
+      </div>
+      <div class="container text-white" id="employee_table">
+        <table class="table">
+          <thead>
+            <tr class="text-white">
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Surname</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Address</th>
+              <th scope="col">Citizen ID</th>
+              <th scope="col">Position</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Remove</th>
+            </tr>
+          </thead>
+          <tbody class="text-white" id="tableList_employee"></tbody>
+        </table>
+      </div>
     </div>
   </div>
-  <div class="container p-5 my-5 bg-dark text-white" id="system_manu_employee_add">
-    <h1>Employee ADD</h1>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="employee_name">Name</span>
-      <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describelby="employee_name">
-      <span class="input-group-text" id="employee_surname">Surname</span>
-      <input type="text" class="form-control" placeholder="Surname" aria-lable="Name" aria-describedby="employee_surname">
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="employee_phoen">Phone</span>
-      <input type="text" class="form-control" placeholder="Phone" aria-label="Phoen" aria-describedby="employee_phone">
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="employee_address">Address</span>
-      <input type="text" class="form-control" placeholder="Address" aria-label="Address" aria-describedby="employee_address">
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="employee_citizen_id">Citizen ID</span>
-      <input type="text" class="form-control" placeholder="Citizen ID" aria-label="Citizen ID" aria-describedby="employee_citizen_id">
-    </div>
-    <div class="input-group mb-3">
-      <span class="input-group-text" id="employee_position">Position</span>
-      <input type="text" class="form-control" placeholder="Position" aria-label="Position" aria-describedby="employee_position">
-    </div>
-    <div class="d-grid"><button onclick="" type="button" class="btn btn-primary btn-block">Submit</button></div>
-  </div>
-  <!-- employee -->
-  <!-- client -->
   <div class="container p-5 my-5 bg-dark text-white" id="system_manu_client">
     <h1>Client Manu</h1>
     <p>Management about Client</p>
     <div class="d-grid">
-      <button onclick="" type="button" class="btn btn-primary btn-block">Client Add</button>
-      <button onclick="" type="button" class="btn btn-primary btn-block">Client Delete</button>
-      <button onclick="" type="button" class="btn btn-primary btn-block">Client Update</button>
-      <button onclick="" type="button" class="btn btn-primary btn-block">Client Search</button>
+      <button onclick="manu_client()" type="button" class="btn btn-primary btn-block" id="btn_menu_client">Client System</button>
+      <div class="contaniner" id="input_client">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Name --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1"
+            id="client_name">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Surname --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Surname" aria-label="Surname"
+            aria-describedby="basic-addon1" id="client_surname">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Phone --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Phone" aria-label="Phone" aria-describedby="basic-addon1"
+            id="client_phone">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Address --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Address" aria-label="Address"
+            aria-describedby="basic-addon1" id="client_address">
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Citizen ID --></span>
+          </div>
+          <input type="text" class="form-control" placeholder="Position" aria-label="Position"
+            aria-describedby="basic-addon1" id="client_citizen_id">
+        </div>
+        <button onclick="client_post()" type="button" class="btn btn-primary btn-block" id="client_add">Add
+          client</button>
+        <div id="client_update"></div>
+      </div>
+      <div class="container text-white" id="client_table">
+        <table class="table">
+          <thead>
+            <tr class="text-white">
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Surname</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Address</th>
+              <th scope="col">Citizen ID</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Remove</th>
+            </tr>
+          </thead>
+          <tbody class="text-white" id="tableList_client"></tbody>
+        </table>
+      </div>
     </div>
   </div>
-  <!-- client -->
+  <div class="container p-5 my-5 bg-dark text-white" id="system_manu_car">
+    <h1>Car Manu</h1>
+    <p>Management about Car</p>
+    <div class="d-grid">
+      <button onclick="" type="button" class="btn btn-primary btn-block">Car System</button>
+    </div>
+  </div>
+  <div class="container p-5 my-5 bg-dark text-white" id="system_manu_station">
+    <h1>Station Manu</h1>
+    <p>Management about Station</p>
+    <div class="d-grid">
+      <button onclick="" type="button" class="btn btn-primary btn-block">Station System</button>
+    </div>
+    <script>
+      hideManu();
+      main_manu();
+    </script>
 </body>
 
 </html>
